@@ -38,3 +38,5 @@ app.get('/unidades', (req, res) => {
 app.get('/usuarios', (req, res) => {
     res.status(200).json(usuarios)
 })
+
+export default app
