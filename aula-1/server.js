@@ -1,7 +1,10 @@
-import app from "./src/app.js"
+import app from './src/app.js'
+import * as dotenv from 'dotenv'
 // import http from "http"
 
-const port = 3001
+dotenv.config()
+
+const port = process.env.PORT
 
 // const rotas = {
 //     '/': 'Bem-vindo ao Auth!',
