@@ -1,35 +1,44 @@
-import express from 'express'
+import express from "express"
 
-export const app = express()
+const app = express()
+
+app.use(express.json())
+
+// Arrays  
 
 const grupos = [
-    {id: 1, nome: 'Todos'},
-    {id: 2, nome: 'Administradores'},
-    {id: 3, nome: 'Gerentes'},
-    {id: 4, nome: 'Usuários limitados'}
+    {id: 0, nome: "Todos"},
+    {id: 1, nome: "Administradores"}, 
+    {id: 2, nome:"Gerentes"},
+    {id: 3, nome: "Usuários limitados"}
 ]
-
-const unidades = [{
-    'unidades': {
-        1: 'Vilhena',
-        2: 'Cacoal',
-        3: 'Guajará'
-    }
-}]
+const unidades = [
+    {id: 0, nome: "Porto Velho"},
+    {id: 1, nome: "Vilhena"},
+    {id: 2, nome: "Cacoal"},
+    {id: 3, nome: "Guajará"}
+]
 
 const usuarios = [
-    {id: 1, nome: 'Vinícius'},
-    {id: 2, nome: 'Eduardo Tartas'},
-    {id: 3, nome: 'Yuri Zetoles'},
-    {id: 4, nome: 'Arthur Gomes'}
+    {id: 0, nome: "José da Silva"},
+    {id: 1, nome: "Vicente da Silva"},
+    {id: 2, nome: "Noé Silva"},
+    {id: 3, nome: "Thomé Silva"}
 ]
 
+// Buscar Id
+
+function buscarId(id, array) {
+    return array.findIndex(grupo => grupo.id == id)
+}
+
+// GET
+
 app.get('/', (req, res) => {
-    res.status(200).send('Bem-vindo ao auth!')
+    res.status(200).send('Bem-vindo ao auth')
 })
 
 app.get('/grupos', (req, res) => {
-    console.log(req.query)
     res.status(200).json(grupos)
 })
 
@@ -38,18 +47,90 @@ app.get('/unidades', (req, res) => {
 })
 
 app.get('/usuarios', (req, res) => {
-    console.log(req.query)
+    res.status(200).json(usuarios)
+})
 
-    const requisicao = req.query.nome
-    
-    for (let i = 0; i < usuarios.length; i++) {
-        if (usuarios[i].nome == requisicao) {
-            console.log(usuarios[i].nome)
-            res.status(200).json([usuarios[i].id, usuarios[i].nome])
-        }
-    }
-        
-    res.status(404).send(`Nenhum usuário encontrado com o nome ${requisicao}.`)
+// GET ID
+
+app.get('/grupos/:id', (req, res) => {
+    let index = buscarId(req.params.id, grupos)
+    res.json(grupos[index])
+})
+
+app.get('/unidades/:id', (req, res) => {
+    let index = buscarId(req.params.id, unidades)
+    res.json(unidades[index])
+})
+
+app.get('/usuarios/:id', (req, res) => {
+    let index = buscarId(req.params.id, usuarios)
+    res.json(usuarios[index])
+})
+
+// POST
+
+app.post('/grupos', (req, res) => {
+    grupos.push(req.body)
+    res.status(201).send("Grupo cadastrado com sucesso!")
+})
+
+app.post('/unidades', (req, res) => {
+    unidades.push(req.body)
+    res.status(201).send("Unidade cadastrada com sucesso!")
+})
+
+app.post('/usuarios', (req, res) => {
+    usuarios.push(req.body)
+    res.status(201).send("Usuário cadastrado com sucesso!")
+})
+
+// PUT
+
+app.put('/grupos/:id', (req, res) => {
+    let index = buscarId(req.params.id)
+
+    grupos[index].nome = req.body.nome
+
+    res.json(grupos[index])
+})
+
+app.put('/unidades/:id', (req, res) => {
+    let index = buscarId(req.params.id, unidades)
+
+    unidades[index].nome = req.body.nome
+
+    res.json(unidades[index])
+})
+
+app.put('/usuarios/:id', (req, res) => {
+    let index = buscarId(req.params.id, usuarios)
+
+    usuarios[index].nome = req.body.nome
+
+    res.json(usuarios[index])
+})
+
+// DELETE 
+
+app.delete('/grupos/:id', (req, res) => {
+    let index = buscarId(req.params.id, grupos)
+    grupos.splice(index, 1)
+
+    res.send(`Grupo ${id} removido com sucesso!`)
+})
+
+app.delete('/unidades/:id', (req, res) => {
+    let index = buscarId(req.params.id, unidades)
+    unidades.splice(index, 1)
+
+    res.send(`Grupo ${id} removido com sucesso!`)
+})
+
+app.delete('/usuarios/:id', (req, res) => {
+    let index = buscarId(req.params.id, usuarios)
+    usuarios.splice(index, 1)
+
+    res.send(`Grupo ${id} removido com sucesso!`)
 })
 
 export default app
